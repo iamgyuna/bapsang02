@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오늘의 밥상</title>
+<style>
+  :root {
+    --bg: #39ff14;          /* 배경: 형광 초록 */
+    --wood-light: #b8743c;  /* 나무 상 */
+    --wood: #96552a;
+    --wood-dark: #5b2f17;
+    --bowl: #fffaf0;        /* 백자 카드 */
+    --ink: #43240f;         /* 글자 */
+    --red: #b5371f;         /* 고추 빛 */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 4vh, 40px);
+    padding: 24px 16px;
+    color: var(--ink);
+    background: var(--bg);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    word-break: keep-all;
+  }
+
+  h1 {
+    font-family: "Nanum Myeongjo", "Noto Serif KR", "AppleMyungjo", "Batang", serif;
+    font-size: clamp(2rem, 6vmin, 3.25rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  h1 em { font-style: normal; color: var(--red); }
+
+  /* 둥근 상 */
+  .table {
+    width: min(92vw, 76vh, 680px);
+    min-width: 288px;
+    aspect-ratio: 1;
+    display: flex;
+    border-radius: 50%;
+    container-type: inline-size;
+    background:
+      repeating-linear-gradient(92deg, rgb(60 25 5 / .07) 0 2px, transparent 2px 9px, rgb(255 220 170 / .05) 9px 12px, transparent 12px 21px),
+      radial-gradient(circle at 45% 38%, var(--wood-light), var(--wood) 75%);
+    box-shadow:
+      inset 0 0 0 10px var(--wood-dark),
+      inset 0 0 0 12px rgb(255 214 160 / .35),
+      inset 0 0 46px rgb(50 20 5 / .4),
+      0 12px 0 -2px #43210f,
+      0 30px 44px -6px rgb(70 35 10 / .5);
+  }
+
+  /* 상 위의 음식들: 아랫줄부터 밥, 국 순서로 놓이고 반찬은 위로 쌓인다.
+     --w 카드 크기, --g 간격, --n 가장 긴 줄의 카드 수 (개수에 따라 아래에서 바뀜) */
+  .dishes {
+    --w: 30cqw; --g: 3cqw; --n: 2;
+    list-style: none;
+    margin: auto;
+    width: calc(var(--n) * var(--w) + (var(--n) - 1) * var(--g) + 1px);
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: center;
+    gap: var(--g);
+  }
+
+  /* 카드 */
+  .dishes li {
+    width: var(--w);
+    height: var(--w);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .1em;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
+    font-size: max(10px, calc(var(--w) * .155));
+    font-weight: 700;
+    line-height: 1.1;
+    overflow-wrap: anywhere;  /* 긴 이름은 두 줄로 */
+    border-radius: 22%;
+    background: radial-gradient(circle at 50% 30%, #fff, var(--bowl) 55%, #f3e2c3);
+    box-shadow:
+      inset 0 0 0 2px rgb(181 55 31 / .16),
+      0 4px 0 #d9bd90,
+      0 9px 14px rgb(45 18 4 / .42);
+    transition: transform .2s ease;
+  }
+  .dishes li:hover { transform: translateY(-4px); }
+  .dishes li span { font-size: calc(var(--w) * .43); line-height: 1.15; }
+
+  /* 5개부터: 2·3·2 줄 */
+  .dishes:has(li:nth-child(5)) { --w: 23cqw; --g: 2.4cqw; --n: 3; }
+  .dishes:has(li:nth-child(5)) li:nth-child(1) { margin-left:  calc((var(--w) + var(--g)) / 2); }
+  .dishes:has(li:nth-child(5)) li:nth-child(2) { margin-right: calc((var(--w) + var(--g)) / 2); }
+
+  /* 8개부터: 3·4·4·3 줄 */
+  .dishes:has(li:nth-child(8)) { --w: 16.4cqw; --g: 1.9cqw; --n: 4; }
+  .dishes:has(li:nth-child(8)) li:nth-child(2) { margin-right: 0; }
+  .dishes:has(li:nth-child(8)) li:nth-child(3) { margin-right: calc((var(--w) + var(--g)) / 2); }
+
+  /* 15개부터: 3·5·5·5·3 줄 */
+  .dishes:has(li:nth-child(15)) { --w: 14.4cqw; --g: 1.5cqw; --n: 5; }
+  .dishes:has(li:nth-child(15)) li:nth-child(1) { margin-left:  calc(var(--w) + var(--g)); }
+  .dishes:has(li:nth-child(15)) li:nth-child(3) { margin-right: calc(var(--w) + var(--g)); }
+
+  /* 22개부터: 상이 아래로 길어진다 */
+  .table:has(li:nth-child(22)) { aspect-ratio: auto; padding: 9% 0; border-radius: 120px; }
+
+  @media (prefers-reduced-motion: reduce) { .dishes li { transition: none; } }
+</style>
+</head>
+<body>
+
+<h1><em>오늘</em>의 밥상</h1>
+
+<main class="table">
+  <ul class="dishes">
+    <!-- 반찬 추가: 아래 한 줄을 복사해서 이모지와 이름만 바꾸세요 -->
+    <li><span>🍚</span>Rice</li>
+    <li><span>🍲</span>Soup</li>
+    <li><span>🥬</span>Kimchi</li>
+    <li><span>🍖</span>Tonkatsu</li>
+    <li><span>🍜</span>Jjamppong</li>
+    <li><span>🍙</span>Gimbap</li>
+    <li><span>🥗</span>Lettuce</li>
+    <li><span>🐟</span>Saury</li>
+  </ul>
+</main>
+
+</body>
+</html>
